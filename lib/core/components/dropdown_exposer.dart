@@ -61,7 +61,8 @@ class _DropdownExposerState extends State<DropdownExposer>{
                 Text(
                   widget.collapsableText,
                   style: TextStyle(
-                    fontSize: widget.collapsedSize
+                    fontSize: widget.collapsedSize,
+                    fontWeight: FontWeight.w400
                   ),
                 )
               :

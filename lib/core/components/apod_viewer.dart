@@ -94,7 +94,8 @@ class _ApodViewerState extends State<ApodViewer>{
               child: Text(
                 widget.apod.title!,
                 style: TextStyle(
-                  fontSize: 16
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold
                 ),
               ),
             ),
@@ -177,7 +178,7 @@ class _ApodViewerState extends State<ApodViewer>{
                     style: TextStyle(
                       fontSize: 12,
                       color: GRAY,
-                      fontWeight: FontWeight.w400
+                      fontWeight: FontWeight.w300
                     ),
                   ),
                 ),

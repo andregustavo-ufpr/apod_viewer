@@ -9,6 +9,7 @@ class HomeTitle extends StatelessWidget{
       "Astronomy Picture of the Day",
       style: TextStyle(
         fontSize: 24,
+        fontWeight: FontWeight.bold
       ),
     );
   }
