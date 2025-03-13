@@ -67,6 +67,10 @@ class _ApodViewerState extends State<ApodViewer>{
     }
 
     _removeFromFavorites();
+
+    if(widget.callback != null){
+      widget.callback!();
+    }
   }
 
   @override
@@ -74,9 +78,9 @@ class _ApodViewerState extends State<ApodViewer>{
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: LIGHT_BLUE,
+        color: BLUE_BG,
         border: Border.all(
-          color: DARK_BLUE,
+          color: LIGHT_BLUE,
           width: 1
         ),
         borderRadius: BorderRadius.circular(20)
@@ -84,94 +88,112 @@ class _ApodViewerState extends State<ApodViewer>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          InkWell(
-            onTap: () => _fullScreen(
-              context, 
-              NetworkImage(widget.apod.imageUrl ?? ""),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image(
-                image: NetworkImage(
-                  widget.apod.imageUrl ?? ""
-                ),
-                errorBuilder: (context, exception, trace) {
-                  return Container();
-                },
-                loadingBuilder: (
-                  BuildContext context, 
-                  Widget child, 
-                  ImageChunkEvent? loadingProgress
-                ) {
-                  if (loadingProgress == null) return child;
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null ? 
-                          // ignore: lines_longer_than_80_chars
-                          loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                        : null,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          SizedBox(height: 8),
           if(widget.apod.title != null)
-            Text(
-              widget.apod.title!,
-              style: TextStyle(
-                fontSize: 16
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text(
+                widget.apod.title!,
+                style: TextStyle(
+                  fontSize: 16
+                ),
               ),
             ),
-          if(widget.apod.authorName != null)
-            Text(
-              "Author: ${widget.apod.authorName}",
-              style: TextStyle(
-                fontSize: 12,
-                color: GRAY
-              ),
-            ),
-          if(widget.apod.explanation != null)
-            DropdownExposer(
-              collapsableText: widget.apod.explanation!, 
-              label: "Description",
-              labelSize: 12,
-              iconSize: 10,
-            ),
-          InkWell(
-            onTap: _toggleFavorite,
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 250),
-              margin: EdgeInsets.only(top: 16),
-              decoration: BoxDecoration(
-                color: WHITE,
-                border: Border.all(color: BLACK),
-                borderRadius: BorderRadius.circular(20)
-              ),
-              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    favorite ? Icons.favorite : Icons.favorite_border,
-                    color: BLACK,
-                    size: 12,
-                  ),
-                  SizedBox(width: 12,),
-                  Text(
-                    favorite ? "Favorite" : "Save",
-                    style: TextStyle(
-                      fontSize: 16
+          Stack(
+            children: [
+              InkWell(
+                onTap: () => _fullScreen(
+                  context, 
+                  NetworkImage(widget.apod.highResUrl ?? ""),
+                ),
+                onDoubleTap: _toggleFavorite,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image(
+                    image: NetworkImage(
+                      widget.apod.imageUrl ?? ""
                     ),
-                  )
-                ]
+                    errorBuilder: (context, exception, trace) {
+                      return Container();
+                    },
+                    loadingBuilder: (
+                      BuildContext context, 
+                      Widget child, 
+                      ImageChunkEvent? loadingProgress
+                    ) {
+                      if (loadingProgress == null) return child;
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null ? 
+                              // ignore: lines_longer_than_80_chars
+                              loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                            : null,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 4,
+                right: 4,
+                child: InkWell(
+                  onTap: _toggleFavorite,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 250),
+                    margin: EdgeInsets.only(left: 16),
+                    decoration: BoxDecoration(
+                      color: (favorite ? DARK_BLUE : BLUE_BG).withOpacity(0.6),
+                      border: Border.all(color: favorite ? DARK_BLUE : BLACK),
+                      borderRadius: BorderRadius.circular(50)
+                    ),
+                    padding: EdgeInsets.all(12),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          favorite ? Icons.favorite : Icons.favorite_border,
+                          color: favorite ? WHITE : BLACK,
+                          size: 12,
+                        ),
+                      ]
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if(widget.apod.copyrightName != null)
+                Expanded(
+                  child: Text(
+                    widget.apod.copyrightName!,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: GRAY,
+                      fontWeight: FontWeight.w400
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          if(widget.apod.explanation != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: DropdownExposer(
+                collapsableText: widget.apod.explanation!, 
+                label: "Description",
+                labelSize: 12,
+                iconSize: 10,
               ),
             ),
-          )
+          
         ],
       ),
     );
@@ -182,10 +204,12 @@ class ApodViewer extends StatefulWidget{
 
   const ApodViewer({
     required this.apod,
+    this.callback,
     super.key
   });
   
   final Apod apod;
+  final VoidCallback? callback;
 
   @override
   State<ApodViewer> createState() => _ApodViewerState();

@@ -3,9 +3,15 @@ import 'package:nasa_apod_viewer/core/data/local/colors.dart';
 
 class _DropdownExposerState extends State<DropdownExposer>{
   bool open = false;
-  final animationDuration = Duration(
+  final Duration animationDuration = Duration(
     milliseconds: 200
   );
+
+  @override
+  void initState() {
+    setState(() => open = widget.startOpened);
+    super.initState();
+  }
 
   void _toggleOpen(){
     setState(() => open = !open);
@@ -26,7 +32,8 @@ class _DropdownExposerState extends State<DropdownExposer>{
                   style: TextStyle(
                     fontSize: widget.labelSize,
                     color: GRAY,
-                    decoration: TextDecoration.underline
+                    decoration: TextDecoration.underline,
+                    decorationThickness: 0.5
                   ),
                 ),
                 SizedBox(width: 8,),
@@ -75,6 +82,7 @@ class DropdownExposer extends StatefulWidget{
     this.labelSize = 16,
     this.iconSize = 12,
     this.collapsedSize = 12,
+    this.startOpened = false,
     super.key
   });
 
@@ -83,6 +91,7 @@ class DropdownExposer extends StatefulWidget{
   final double labelSize;
   final double iconSize;
   final double collapsedSize;
+  final bool startOpened;
 
   @override
   State<DropdownExposer> createState() => _DropdownExposerState();

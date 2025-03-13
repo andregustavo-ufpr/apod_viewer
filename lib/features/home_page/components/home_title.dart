@@ -8,7 +8,7 @@ class HomeTitle extends StatelessWidget{
     return Text(
       "Astronomy Picture of the Day",
       style: TextStyle(
-        fontSize: 24
+        fontSize: 24,
       ),
     );
   }

@@ -12,9 +12,10 @@ class _MoreInfoState extends State<MoreInfo>{
         "It reads: Each day a different image or photograph of our universe "
         "is featured, along with a brief explanation written by a "
         "professional astronomer.",
-      label: "info",
+      label: "About this project",
       labelSize: 12,
       iconSize: 10,
+      startOpened: true,
     );
   }
 

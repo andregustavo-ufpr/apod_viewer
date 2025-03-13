@@ -1,46 +1,50 @@
 import 'package:flutter/material.dart';
 
 class Apod with ChangeNotifier{
+  DateTime? date;
+  String? copyright;
+  String? explanation;
+  String? highResUrl;
   String? imageUrl;
   String? title;
-  String? author;
-  String? explanation;
-  DateTime? date;
 
   Apod({
-    this.author,
+    this.copyright,
     this.date,
     this.explanation,
+    this.highResUrl,
     this.imageUrl,
-    this.title
+    this.title,
   });
 
   Map<String, dynamic> toMap(){
     return {
-      "copyright": author ?? "",
+      "copyright": copyright ?? "",
       "date": date.toString(),
       "explanation": explanation ?? "",
+      "hdurl": highResUrl ?? "",
+      "title": title ?? "",
       "url": imageUrl ?? "",
-      "title": title ?? ""
     };
   }
 
   static Apod fromMap(Map<String, dynamic> map){
     return Apod(
-      author: "André Gustavo Silveira",
+      copyright: map["copyright"],
       date: DateTime.tryParse(map["date"]),
       explanation: map["explanation"],
       imageUrl: map["url"],
-      title: map["title"]
+      title: map["title"],
+      highResUrl: map["hdurl"]
     );
   }
 
-  String? get authorName {
-    if(author != null){
-      return author!.replaceAll("\n", "");
+  String? get copyrightName {
+    if(copyright != null){
+      return copyright!.replaceAll("\n", "");
     }
 
-    return author;
+    return copyright;
   }
 
 }
