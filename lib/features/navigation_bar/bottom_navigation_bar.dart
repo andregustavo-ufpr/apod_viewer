@@ -3,8 +3,8 @@ import 'package:nasa_apod_viewer/core/data/local/colors.dart';
 import 'package:nasa_apod_viewer/features/favorite_page/favorites.dart';
 import 'package:nasa_apod_viewer/features/home_page/home.dart';
 
-class CustomBottomNavigationBar extends StatelessWidget{
-  const CustomBottomNavigationBar({
+class BottomNavbar extends StatelessWidget{
+  const BottomNavbar({
     this.pageIndex = 0,
     super.key
   });

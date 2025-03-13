@@ -5,6 +5,7 @@ import 'package:nasa_apod_viewer/core/components/apod_viewer.dart';
 import 'package:nasa_apod_viewer/core/components/default_appbar.dart';
 import 'package:nasa_apod_viewer/core/constants/shared_preferences.dart';
 import 'package:nasa_apod_viewer/core/data/local/apod.dart';
+import 'package:nasa_apod_viewer/core/data/local/colors.dart';
 import 'package:nasa_apod_viewer/features/navigation_bar/bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,10 +41,13 @@ class _FavoritesState extends State<Favorites>{
         onLeading: null,
         title: "Favorites",
       ),
+      backgroundColor: WHITE,
+      extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-            horizontal: 20
+            horizontal: 20,
+            vertical: kToolbarHeight + 20
           ),
           child: ListView.separated(
             shrinkWrap: true,
@@ -58,7 +62,7 @@ class _FavoritesState extends State<Favorites>{
           ),
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(
+      bottomNavigationBar: BottomNavbar(
         pageIndex: 1, 
       ),
     ); 
