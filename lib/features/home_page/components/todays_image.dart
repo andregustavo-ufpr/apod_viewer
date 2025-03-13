@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nasa_apod_viewer/core/components/apod_viewer.dart';
 import 'package:nasa_apod_viewer/core/components/loading_gradient.dart';
+import 'package:nasa_apod_viewer/core/constants/shared_preferences.dart';
 import 'package:nasa_apod_viewer/core/data/local/apod.dart';
 import 'package:nasa_apod_viewer/core/data/local/colors.dart';
 import 'package:nasa_apod_viewer/core/domain/services/nasa_api_service.dart';
@@ -16,12 +17,12 @@ class _TodaysImageState extends State<TodaysImage>{
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
-      String? lastSetDate = prefs.getString("LAST_SET");
+      String? lastSetDate = prefs.getString(lastImagesSetDate);
 
       DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
 
       if(lastSetDate != null && !DateTime.parse(lastSetDate).isBefore(yesterday)){
-        String? storedImage = prefs.getString("TODAYS");
+        String? storedImage = prefs.getString(todaysSetImage);
         
         if(storedImage != null){
           setState(() {
@@ -45,8 +46,8 @@ class _TodaysImageState extends State<TodaysImage>{
       }
 
       SharedPreferences.getInstance().then((prefs) {
-        prefs.setString("TODAYS", jsonEncode(r));
-        prefs.setString("LAST_SET", DateTime.now().toIso8601String());
+        prefs.setString(todaysSetImage, jsonEncode(r));
+        prefs.setString(lastImagesSetDate, DateTime.now().toIso8601String());
       });
 
       setState(() {

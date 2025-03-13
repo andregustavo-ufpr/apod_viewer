@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nasa_apod_viewer/core/components/dropdown_exposer.dart';
 import 'package:nasa_apod_viewer/core/components/interactive_image_viewer.dart';
+import 'package:nasa_apod_viewer/core/constants/shared_preferences.dart';
 import 'package:nasa_apod_viewer/core/data/local/apod.dart';
 import 'package:nasa_apod_viewer/core/data/local/colors.dart';
 import 'package:nasa_apod_viewer/core/page_routes/transparent_page_route.dart';
@@ -23,17 +24,17 @@ class _ApodViewerState extends State<ApodViewer>{
 
   Future<bool> _checkFavorite() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> favorites = prefs.getStringList("FAVORITES") ?? [];
+    List<String> favorites = prefs.getStringList(favoritesList) ?? [];
 
     return favorites.contains(jsonEncode(widget.apod.toMap()));
   }
 
   void _addToFavorites(){
     SharedPreferences.getInstance().then((prefs) {
-      List<String> favorites = prefs.getStringList("FAVORITES") ?? [];
+      List<String> favorites = prefs.getStringList(favoritesList) ?? [];
       
       favorites.add(jsonEncode(widget.apod.toMap()));
-      prefs.setStringList("FAVORITES", favorites);
+      prefs.setStringList(favoritesList, favorites);
 
       setState(() => favorite = true);
     });
@@ -51,10 +52,10 @@ class _ApodViewerState extends State<ApodViewer>{
 
   void _removeFromFavorites(){
     SharedPreferences.getInstance().then((prefs) {
-      List<String> favorites = prefs.getStringList("FAVORITES") ?? [];
+      List<String> favorites = prefs.getStringList(favoritesList) ?? [];
 
       favorites.removeWhere((apod) => apod == jsonEncode(widget.apod.toMap()));
-      prefs.setStringList("FAVORITES", favorites);
+      prefs.setStringList(favoritesList, favorites);
 
       setState(() => favorite = false);
     });

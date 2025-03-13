@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nasa_apod_viewer/core/components/apod_viewer.dart';
 import 'package:nasa_apod_viewer/core/components/default_appbar.dart';
+import 'package:nasa_apod_viewer/core/constants/shared_preferences.dart';
 import 'package:nasa_apod_viewer/core/data/local/apod.dart';
 import 'package:nasa_apod_viewer/features/navigation_bar/bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +20,7 @@ class _FavoritesState extends State<Favorites>{
 
   void _buildFavoriteImages(){
     SharedPreferences.getInstance().then((prefs){
-      List<String> storedImages = prefs.getStringList("FAVORITES") ?? [];
+      List<String> storedImages = prefs.getStringList(favoritesList) ?? [];
       List<Apod> treatedImages = [];
 
       for(String image in storedImages){
