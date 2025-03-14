@@ -53,7 +53,7 @@ class Api {
 
     }
     catch(e){
-      throw FailedToDecodeBody("Failed to decode response body");
+      throw FailedToDecodeBody("Failed to decode response body: ${e.toString()}");
     }
 
     return result;
