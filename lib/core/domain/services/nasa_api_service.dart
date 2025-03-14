@@ -11,7 +11,9 @@ class NasaApiService {
   }){
 
     Map<String, dynamic> params = {
-      // TODO: Remove key and place in .env file
+      /**This key should be inside a .env file, utilizing the package
+       * flutter_dot_env. For the purpouses of this exercise, im gonna leave
+       * it hard coded */ 
       "api_key": "ecPKzSeT179jEfIikBS5aiyeE7TYSuMOMhng5kJw"
     };
 

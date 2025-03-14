@@ -34,7 +34,7 @@ class Apod with ChangeNotifier{
   static Apod fromMap(Map<String, dynamic> map){
     return Apod(
       copyright: map["copyright"],
-      date: DateTime.tryParse(map["date"]),
+      date: DateTime.tryParse(map["date"] ?? DateTime.now().toString()),
       explanation: map["explanation"],
       highResUrl: map["hdurl"],
       imageUrl: map["url"],
