@@ -20,7 +20,6 @@ class Api {
         path: endpoint,
         queryParameters: params
       );
-      print(params);
 
       http.Response response = await http.get(uri);
 
@@ -44,7 +43,7 @@ class Api {
 
     try{
       dynamic decodedBody = jsonDecode(utf8.decode(aResponse.bodyBytes));
-      print(decodedBody);
+      
       if(decodedBody.runtimeType == List){
         result["response_list"] = decodedBody;
       }
