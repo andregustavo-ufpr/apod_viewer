@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:nasa_apod_viewer/core/data/remote/api.dart';
 import 'package:nasa_apod_viewer/utils/date.dart';
 
@@ -12,9 +13,9 @@ class NasaApiService {
 
     Map<String, dynamic> params = {
       /**This key should be inside a .env file, utilizing the package
-       * flutter_dot_env. For the purpouses of this exercise, im gonna leave
-       * it hard coded */ 
-      "api_key": "ecPKzSeT179jEfIikBS5aiyeE7TYSuMOMhng5kJw"
+       * flutter_dot_env. Create your own .env file and provide your API key
+       * */ 
+      "api_key": dotenv.env["NASA_API_KEY"] ?? ""
     };
 
     if(date != null){

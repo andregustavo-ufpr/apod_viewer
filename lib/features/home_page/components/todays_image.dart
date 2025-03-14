@@ -19,9 +19,9 @@ class _TodaysImageState extends State<TodaysImage>{
     SharedPreferences.getInstance().then((prefs) {
       String? lastSetDate = prefs.getString(lastImagesSetDate);
 
-      DateTime yesterday = DateTime.now();
+      DateTime yesterday = DateTime.now().copyWith(hour: 0, minute: 0);
 
-      if(lastSetDate != null && !DateTime.parse(lastSetDate).isBefore(yesterday)){
+      if(lastSetDate != null && !(DateTime.parse(lastSetDate).isBefore(yesterday))){
         String? storedImage = prefs.getString(todaysSetImage);
         
         if(storedImage != null){
