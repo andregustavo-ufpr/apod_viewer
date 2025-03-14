@@ -20,6 +20,7 @@ class NasaApiService {
     }
     if(endDate != null){
       params["start_date"] = params["date"];
+      params.remove("date");
       params["end_date"] = formatDate(endDate);
     }
 

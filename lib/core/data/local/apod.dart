@@ -6,6 +6,7 @@ class Apod with ChangeNotifier{
   String? explanation;
   String? highResUrl;
   String? imageUrl;
+  String? mediaType;
   String? title;
 
   Apod({
@@ -14,17 +15,19 @@ class Apod with ChangeNotifier{
     this.explanation,
     this.highResUrl,
     this.imageUrl,
+    this.mediaType,
     this.title,
   });
 
   Map<String, dynamic> toMap(){
     return {
-      "copyright": copyright ?? "",
+      "copyright": copyright,
       "date": date.toString(),
-      "explanation": explanation ?? "",
-      "hdurl": highResUrl ?? "",
-      "title": title ?? "",
-      "url": imageUrl ?? "",
+      "explanation": explanation,
+      "hdurl": highResUrl,
+      "media_type": mediaType,
+      "title": title,
+      "url": imageUrl,
     };
   }
 
@@ -33,9 +36,10 @@ class Apod with ChangeNotifier{
       copyright: map["copyright"],
       date: DateTime.tryParse(map["date"]),
       explanation: map["explanation"],
+      highResUrl: map["hdurl"],
       imageUrl: map["url"],
+      mediaType: map["media_type"],
       title: map["title"],
-      highResUrl: map["hdurl"]
     );
   }
 

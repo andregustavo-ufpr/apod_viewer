@@ -6,14 +6,8 @@ import 'package:nasa_apod_viewer/features/home_page/components/more_info.dart';
 import 'package:nasa_apod_viewer/features/home_page/components/todays_image.dart';
 import 'package:nasa_apod_viewer/features/navigation_bar/bottom_navigation_bar.dart';
 
-class _HomeState extends State<Home>{
-  
-  @override
-  void initState(){
-    super.initState();
-
-    // NasaApiService().searchApod().then((r) => print(r));
-  }
+class Home extends StatelessWidget{
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,12 +63,4 @@ class _HomeState extends State<Home>{
       )
     );
   }
-
-}
-
-class Home extends StatefulWidget{
-  const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
 }

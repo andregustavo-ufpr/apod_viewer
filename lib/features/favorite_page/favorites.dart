@@ -43,15 +43,16 @@ class _FavoritesState extends State<Favorites>{
       ),
       backgroundColor: WHITE,
       extendBodyBehindAppBar: true,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: kToolbarHeight + 20
-          ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
+        child: SingleChildScrollView(
           child: ListView.separated(
+            physics: ScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (c, i) => ApodViewer(
+              favoritePage: true,
               apod: favoriteImages[i],
               callback: _buildFavoriteImages,
             ), 

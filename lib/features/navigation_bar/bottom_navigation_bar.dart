@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nasa_apod_viewer/core/data/local/colors.dart';
 import 'package:nasa_apod_viewer/features/favorite_page/favorites.dart';
 import 'package:nasa_apod_viewer/features/home_page/home.dart';
+import 'package:nasa_apod_viewer/features/search_page/search.dart';
 
 class BottomNavbar extends StatelessWidget{
   const BottomNavbar({
@@ -30,7 +31,7 @@ class BottomNavbar extends StatelessWidget{
       case 2:
         Navigator.of(context).pushReplacement(
           PageRouteBuilder(
-            pageBuilder: (context, _, __) => Home()
+            pageBuilder: (context, _, __) => Search()
           )
         );
         return;

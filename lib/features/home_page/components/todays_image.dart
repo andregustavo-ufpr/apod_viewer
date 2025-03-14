@@ -7,19 +7,19 @@ import 'package:nasa_apod_viewer/core/constants/shared_preferences.dart';
 import 'package:nasa_apod_viewer/core/data/local/apod.dart';
 import 'package:nasa_apod_viewer/core/data/local/colors.dart';
 import 'package:nasa_apod_viewer/core/domain/services/nasa_api_service.dart';
+import 'package:nasa_apod_viewer/utils/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _TodaysImageState extends State<TodaysImage>{
   Apod? todaysImage;
-  bool error = false,
-    loading = false;
+  bool loading = false;
 
   @override
   void initState() {
     SharedPreferences.getInstance().then((prefs) {
       String? lastSetDate = prefs.getString(lastImagesSetDate);
 
-      DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
+      DateTime yesterday = DateTime.now();
 
       if(lastSetDate != null && !DateTime.parse(lastSetDate).isBefore(yesterday)){
         String? storedImage = prefs.getString(todaysSetImage);
@@ -40,9 +40,23 @@ class _TodaysImageState extends State<TodaysImage>{
     NasaApiService().searchApod().then((r) {
       if(!r["success"]){
         setState(() {
-          error = true;
           loading = false;
         });
+
+        if(context.mounted){
+          snackbar(
+            context: context,
+            children: [
+              Text(
+                r["msg"] ?? "Failed to retrieve todays image. Try again later",
+                style: TextStyle(
+                  color: WHITE,
+                  fontSize: 16
+                ),
+              )
+            ]
+          );
+        }
       }
 
       SharedPreferences.getInstance().then((prefs) {
@@ -80,18 +94,33 @@ class _TodaysImageState extends State<TodaysImage>{
       child: Container(
         width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
-          color: WHITE,
-          border: Border.all(color: BLACK),
+          color: DARK_BLUE,
+          border: Border.all(color: DARK_BLUE),
           borderRadius: BorderRadius.circular(20)
         ),
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(12),
         child: Center(
-          child: Text("Discover!")
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.search,
+                color: BLUE_BG,
+                size: 20,
+              ),
+              SizedBox( width: 8,),
+              Text(
+                "Discover!",
+                style: TextStyle(
+                  color: BLUE_BG,
+                  fontSize: 20
+                ),
+              ),
+            ],
+          )
         ),
       ),
     );
-
-    
   }
 
 }

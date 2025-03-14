@@ -1,12 +1,16 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:nasa_apod_viewer/core/components/apod_image.dart';
+import 'package:nasa_apod_viewer/core/components/apod_video.dart';
 import 'package:nasa_apod_viewer/core/components/dropdown_exposer.dart';
 import 'package:nasa_apod_viewer/core/components/interactive_image_viewer.dart';
 import 'package:nasa_apod_viewer/core/constants/shared_preferences.dart';
 import 'package:nasa_apod_viewer/core/data/local/apod.dart';
 import 'package:nasa_apod_viewer/core/data/local/colors.dart';
 import 'package:nasa_apod_viewer/core/page_routes/transparent_page_route.dart';
+import 'package:nasa_apod_viewer/utils/date.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _ApodViewerState extends State<ApodViewer>{
@@ -15,10 +19,17 @@ class _ApodViewerState extends State<ApodViewer>{
 
   @override
   void initState() {
-    _checkFavorite().then((bool isFavorite) {
-      setState(() => favorite = isFavorite);
-    });
 
+    if(!widget.favoritePage){
+      _checkFavorite().then((bool isFavorite) {
+        setState(() => favorite = isFavorite);
+      });
+      return;
+    }
+
+    setState(() {
+      favorite = true;
+    });
     super.initState();
   }
 
@@ -90,14 +101,37 @@ class _ApodViewerState extends State<ApodViewer>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if(widget.apod.title != null)
+            Row(
+              children: [
+                Icon(
+                  Icons.camera_alt,
+                  size: 16,
+                ),
+                SizedBox(width: 8,),
+                Expanded(
+                  child: Text(
+                    widget.apod.title!,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          if(widget.apod.date != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                widget.apod.title!,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold
-                ),
+              child: Row(
+                children: [
+                  Text(
+                    visualFormatDate(widget.apod.date!),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: GRAY
+                    ),
+                  )
+                ]
               ),
             ),
           Stack(
@@ -105,37 +139,15 @@ class _ApodViewerState extends State<ApodViewer>{
               InkWell(
                 onTap: () => _fullScreen(
                   context, 
-                  NetworkImage(widget.apod.highResUrl ?? ""),
+                  CachedNetworkImageProvider(widget.apod.highResUrl ?? ""),
                 ),
                 onDoubleTap: _toggleFavorite,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image(
-                    image: NetworkImage(
-                      widget.apod.imageUrl ?? ""
-                    ),
-                    errorBuilder: (context, exception, trace) {
-                      return Container();
-                    },
-                    loadingBuilder: (
-                      BuildContext context, 
-                      Widget child, 
-                      ImageChunkEvent? loadingProgress
-                    ) {
-                      if (loadingProgress == null) return child;
-                      return Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null ? 
-                              // ignore: lines_longer_than_80_chars
-                              loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                            : null,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  child: (widget.apod.mediaType ?? "image") == "image" ? 
+                    ApodImage(apod: widget.apod)
+                  :
+                    ApodVideo(apod: widget.apod)
                 ),
               ),
               Positioned(
@@ -168,34 +180,25 @@ class _ApodViewerState extends State<ApodViewer>{
             ],
           ),
           SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if(widget.apod.copyrightName != null)
-                Expanded(
-                  child: Text(
-                    widget.apod.copyrightName!,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: GRAY,
-                      fontWeight: FontWeight.w300
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          if(widget.apod.explanation != null)
+          if(widget.apod.copyrightName != null && widget.apod.copyrightName!.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: DropdownExposer(
-                collapsableText: widget.apod.explanation!, 
-                label: "Description",
-                labelSize: 12,
-                iconSize: 10,
+              padding: EdgeInsets.only(bottom: 8),
+              child: Text(
+                widget.apod.copyrightName!,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: GRAY,
+                  fontWeight: FontWeight.w300
+                ),
               ),
             ),
-          
+          if(widget.apod.explanation != null)
+            DropdownExposer(
+              collapsableText: widget.apod.explanation!, 
+              label: "Description",
+              labelSize: 12,
+              iconSize: 10,
+            ),
         ],
       ),
     );
@@ -207,11 +210,13 @@ class ApodViewer extends StatefulWidget{
   const ApodViewer({
     required this.apod,
     this.callback,
+    this.favoritePage = false,
     super.key
   });
   
   final Apod apod;
   final VoidCallback? callback;
+  final bool favoritePage;
 
   @override
   State<ApodViewer> createState() => _ApodViewerState();

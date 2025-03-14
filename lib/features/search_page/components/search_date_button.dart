@@ -10,7 +10,7 @@ class _SearchDateButtonState extends State<SearchDateButton>{
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2012, 1, 1),
+      firstDate: DateTime(1995, 6, 16),
       lastDate: DateTime.now()
     );
 
@@ -18,6 +18,8 @@ class _SearchDateButtonState extends State<SearchDateButton>{
       setState(() {
         selectedDate = picked;
       });
+
+      widget.callback!(selectedDate);
     }
   }
   
@@ -28,6 +30,7 @@ class _SearchDateButtonState extends State<SearchDateButton>{
     return InkWell(
       onTap: () => _openDatePicker(context),
       child: Container(
+        padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: filled ? DARK_BLUE : BLUE_BG,
           borderRadius: BorderRadius.circular(20),
@@ -35,12 +38,17 @@ class _SearchDateButtonState extends State<SearchDateButton>{
             color: DARK_BLUE
           )
         ),
-        child: Text(
-          !filled ? "Select a date" : formatDate(selectedDate!),
-          style: TextStyle(
-            color: filled ? WHITE : DARK_BLUE,
-            fontSize: 16,
-            fontWeight: FontWeight.w500
+        child: Center(
+          child: Text(
+            !filled ? 
+              (widget.placeholderText ?? "Select a date") 
+            : 
+              visualFormatDate(selectedDate!),
+            style: TextStyle(
+              color: filled ? WHITE : DARK_BLUE,
+              fontSize: 16,
+              fontWeight: FontWeight.w500
+            ),
           ),
         ),
       ),
@@ -51,10 +59,12 @@ class _SearchDateButtonState extends State<SearchDateButton>{
 class SearchDateButton extends StatefulWidget{
   const SearchDateButton({
     this.callback,
+    this.placeholderText,
     super.key
   });
 
-  final VoidCallback? callback;
+  final Function? callback;
+  final String? placeholderText;
 
   @override
   State<SearchDateButton> createState() => _SearchDateButtonState();
